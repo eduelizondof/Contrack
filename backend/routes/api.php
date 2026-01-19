@@ -26,3 +26,13 @@ require __DIR__ . '/app/inicio.php';
 require __DIR__ . '/app/configuracion.php';
 require __DIR__ . '/app/notificaciones.php';
 require __DIR__ . '/app/chat.php';
+
+// Módulos del sistema de gestión de rentas
+require __DIR__ . '/app/dashboard.php';
+require __DIR__ . '/app/inmuebles.php';
+require __DIR__ . '/app/unidades.php';
+require __DIR__ . '/app/contratos.php';
+require __DIR__ . '/app/expedientes.php';
+require __DIR__ . '/app/finanzas.php';
+require __DIR__ . '/app/tickets.php';
+
