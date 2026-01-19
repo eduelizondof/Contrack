@@ -1,0 +1,247 @@
+.vista-detalle-usuario {
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  min-height: calc(100vh - 200px);
+}
+
+@media (min-width: 1400px) {
+  .vista-detalle-usuario {
+    max-width: 80%;
+  }
+}
+
+.detalle-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--color-heading);
+  margin: 0;
+}
+
+.page-subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  margin: 0.25rem 0 0 0;
+}
+
+.cargando-container {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.detalle-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.acciones-finales {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1.5rem 0;
+  margin-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.btn-cancelar-final {
+  padding: 0.75rem 2rem;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface-bg);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancelar-final:hover {
+  border-color: var(--color-text-muted);
+  background: var(--color-background-mute);
+}
+
+.zona-peligro {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.peligro-texto {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.btn-eliminar-usuario {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  max-width: 300px;
+}
+
+.btn-eliminar-usuario:hover:not(:disabled) {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn-eliminar-usuario:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-eliminar-usuario .icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: var(--color-surface-bg);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-confirmacion {
+  padding: 1.5rem;
+}
+
+.modal-confirmacion h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin: 0 0 1rem 0;
+}
+
+.modal-confirmacion p {
+  color: var(--color-text);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+}
+
+.modal-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.btn-cancelar {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface-bg);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancelar:hover {
+  border-color: var(--color-text-muted);
+  background: var(--color-background-mute);
+}
+
+.btn-eliminar {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-eliminar:hover:not(:disabled) {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+.btn-eliminar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .vista-detalle-usuario {
+    padding: 1rem;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+  }
+  
+  .btn-eliminar-usuario {
+    width: 100%;
+    max-width: none;
+  }
+  
+  .modal-content {
+    max-width: 100%;
+  }
+  
+  .modal-acciones {
+    flex-direction: column-reverse;
+  }
+  
+  .btn-cancelar,
+  .btn-eliminar {
+    width: 100%;
+  }
+}
+
+/* Dark mode */
+html.dark .modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+html.dark .modal-content {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}

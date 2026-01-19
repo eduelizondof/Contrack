@@ -1,0 +1,75 @@
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.theme-toggle.collapsed {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.theme-toggle:hover {
+  color: #667eea;
+}
+
+.theme-toggle .icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--text-color, #4a5568);
+  transition: all 0.3s ease;
+}
+
+.theme-toggle.is-dark .icon {
+  color: #cbd5e0;
+}
+
+.theme-toggle.is-dark:hover {
+  color: #667eea;
+}
+
+/* Animación de rotación */
+.sun-icon {
+  animation: rotate 0.5s ease-in-out;
+}
+
+.moon-icon {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(360deg);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Dark mode */
+:global(.dark) .theme-toggle .icon {
+  color: #cbd5e0;
+}

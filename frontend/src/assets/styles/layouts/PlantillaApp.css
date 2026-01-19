@@ -1,0 +1,112 @@
+.app-layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-layout-bg);
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+
+.app-main {
+  flex: 1;
+  padding: 0;
+  transition: padding-left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  /* Permite que flex funcione correctamente */
+}
+
+/* Desktop: ajustar padding cuando sidebar está visible */
+@media (min-width: 1024px) {
+  .app-main {
+    padding-left: 256px;
+  }
+
+  .app-main.sidebar-collapsed {
+    padding-left: 80px;
+  }
+
+  .app-content {
+    margin-left: -1px;
+    /* Reducir separación visual con sidebar */
+  }
+}
+
+.app-content {
+  max-width: 100%;
+  margin: 0;
+  background: var(--color-content-bg);
+  border-radius: 2.5rem 0 0 0;
+  /* Solo redondeado superior izquierdo */
+  box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.03);
+  padding: 1rem;
+  width: 100%;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  padding-bottom: calc(1.5rem + 5rem);
+  /* Padding normal + espacio para MenuPie en mobile */
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  /* Border más suave */
+  border-right: none;
+  border-bottom: none;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .app-content {
+    padding: 2rem;
+    border-radius: 1.5rem 1.5rem 0 0;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .app-main {
+    padding-left: 256px;
+  }
+
+  .app-main.sidebar-collapsed {
+    padding-left: 80px;
+    /* Ajustado para sidebar colapsado */
+  }
+
+  .app-content {
+    padding: 2rem;
+    border-radius: 3.5rem 0 0 0;
+    margin-top: 0;
+  }
+}
+
+/* Pantallas grandes (1800px+) */
+@media (min-width: 1800px) {
+  .app-content {
+    padding: 2.5rem 3rem;
+  }
+}
+
+/* Pantallas extra grandes (2560px+) */
+@media (min-width: 2560px) {
+  .app-content {
+    padding: 3rem 4rem;
+  }
+}
+
+/* Dark mode */
+html.dark .app-layout {
+  background: var(--color-layout-bg);
+}
+
+html.dark .app-content {
+  background: var(--color-content-bg);
+  box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--color-border);
+  border-right: none;
+  border-bottom: none;
+}

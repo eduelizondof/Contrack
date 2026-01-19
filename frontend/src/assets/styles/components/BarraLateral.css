@@ -1,0 +1,387 @@
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 256px;
+  background: var(--color-surface-bg);
+  border: none;
+  box-shadow: none;
+  transition: width 0.3s ease;
+  z-index: 100;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* En mobile/tablet, ocultar el sidebar */
+@media (max-width: 1023px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  padding: 0.75rem;
+  gap: 0.5rem;
+}
+
+.sidebar-header {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background: var(--color-surface-bg);
+}
+
+/* Cuando el sidebar está desplegado, alinear el header a la derecha */
+.sidebar:not(.collapsed) .sidebar-header {
+  justify-content: flex-end;
+  padding-right: 0.75rem;
+}
+
+.sidebar-collapse-header-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  color: var(--color-text);
+  transition: all 0.2s ease;
+  padding: 0;
+  position: relative;
+}
+
+.sidebar-collapse-header-button:hover {
+  background: var(--color-background-mute);
+  color: var(--color-primary);
+}
+
+.sidebar-collapse-header-button:active {
+  transform: scale(0.95);
+}
+
+.sidebar-collapse-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+}
+
+/* Dark mode */
+html.dark .sidebar-collapse-header-button:hover {
+  background: var(--color-background-mute);
+  color: var(--color-primary);
+}
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  /* Permite que el flex funcione correctamente */
+}
+
+.sidebar-footer {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-color, rgba(226, 232, 240, 0.5));
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.collapse-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--text-color, #4a5568);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.collapse-button:hover {
+  background-color: var(--hover-bg, #f7fafc);
+  color: var(--primary-color, #667eea);
+}
+
+.collapse-button.collapsed {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.collapse-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.collapse-label {
+  flex: 1;
+  text-align: left;
+}
+
+.collapse-button.collapsed .collapse-label {
+  display: none;
+}
+
+.theme-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--text-color, #4a5568);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.theme-button:hover {
+  background-color: var(--hover-bg, #f7fafc);
+  color: var(--primary-color, #667eea);
+}
+
+.theme-button.collapsed {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.theme-button .theme-toggle {
+  flex-shrink: 0;
+}
+
+.theme-label {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-color, #4a5568);
+  text-align: left;
+}
+
+.theme-button.collapsed .theme-label {
+  display: none;
+}
+
+.config-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--text-color, #4a5568);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.config-button:hover {
+  background-color: var(--hover-bg, #f7fafc);
+  color: var(--primary-color, #667eea);
+}
+
+.config-button.collapsed {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.config-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.config-label {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-color, #4a5568);
+  text-align: left;
+}
+
+.config-button.collapsed .config-label {
+  display: none;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: var(--danger-color, #e53e3e);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.logout-button:hover {
+  background-color: var(--danger-hover-bg, #fee);
+  color: var(--danger-hover, #c53030);
+}
+
+.logout-button.collapsed {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.logout-button.confirming {
+  background-color: var(--danger-color, #e53e3e);
+  color: white !important;
+  box-shadow: 0 0 15px rgba(229, 62, 62, 0.6);
+  animation: logout-glow 1.5s ease-in-out infinite alternate;
+}
+
+.logout-button.confirming .logout-icon {
+  color: white !important;
+}
+
+.logout-button.confirming .logout-label {
+  color: white !important;
+  font-weight: 700;
+}
+
+@keyframes logout-glow {
+  from {
+    box-shadow: 0 0 5px rgba(229, 62, 62, 0.4);
+    transform: scale(1);
+  }
+
+  to {
+    box-shadow: 0 0 20px rgba(229, 62, 62, 0.8), 0 0 30px rgba(229, 62, 62, 0.4);
+    transform: scale(1.02);
+  }
+}
+
+.logout-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.logout-label {
+  flex: 1;
+  text-align: left;
+}
+
+.logout-button.collapsed .logout-label {
+  display: none;
+}
+
+/* Scrollbar styling */
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-color, #cbd5e0);
+  border-radius: 3px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-hover, #a0aec0);
+}
+
+
+/* Dark mode */
+html.dark .sidebar {
+  background: var(--color-surface-bg);
+}
+
+html.dark .collapse-button {
+  color: #cbd5e0 !important;
+}
+
+html.dark .collapse-button:hover {
+  background-color: var(--color-background-mute) !important;
+  color: var(--color-primary) !important;
+}
+
+html.dark .sidebar-nav::-webkit-scrollbar-thumb {
+  background: #4a5568 !important;
+}
+
+html.dark .sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: #718096 !important;
+}
+
+html.dark .sidebar-footer {
+  border-top-color: #4a5568 !important;
+}
+
+html.dark .theme-button {
+  color: #cbd5e0 !important;
+}
+
+html.dark .theme-button:hover {
+  background-color: var(--color-background-mute) !important;
+  color: var(--color-primary) !important;
+}
+
+html.dark .theme-label {
+  color: var(--color-text) !important;
+}
+
+html.dark .config-button {
+  color: #cbd5e0 !important;
+}
+
+html.dark .config-button:hover {
+  background-color: var(--color-background-mute) !important;
+  color: var(--color-primary) !important;
+}
+
+html.dark .config-label {
+  color: var(--color-text) !important;
+}
+
+html.dark .logout-button {
+  color: #fc8181 !important;
+}
+
+html.dark .logout-button:hover {
+  background-color: rgba(229, 62, 62, 0.1) !important;
+  color: #f56565 !important;
+}

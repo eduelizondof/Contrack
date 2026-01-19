@@ -1,0 +1,70 @@
+---
+description: diseñar nuevos modulos o funcionalidades completas 
+alwaysApply: false
+---
+# Contexto del Proyecto - Template SPA
+
+## Stack Técnico
+
+### Backend
+- **Framework**: Laravel (PHP 8.2+)
+- **Autenticación**: Laravel Sanctum (SPA authentication)
+- **Roles y Permisos**: Spatie Laravel Permission
+- **Auditoría**: Spatie Laravel Activity Log
+- **Arquitectura**: API REST
+
+### Frontend
+- **Framework**: Vue.js 3 con Composition API
+- **Estado**: Pinia (gestión de estado)
+- **Navegación**: Vue Router
+- **Móvil**: Capacitor (Android/iOS)
+- **Estilos**: CSS con soporte para dark mode
+
+### Arquitectura
+- **Tipo**: SPA (Single Page Application)
+- **Comunicación**: API REST entre frontend y backend
+- **Autenticación**: Stateful authentication con Sanctum (cookies + CSRF)
+
+## Estructura del Proyecto
+
+```
+[PROYECTO]/
+├── backend/                    # Aplicación Laravel
+│   ├── app/
+│   │   ├── Http/Controllers/   # Controladores organizados por módulo
+│   │   │   ├── Autenticacion/
+│   │   │   └── [Modulo]/       # Controladores por módulo
+│   │   └── Models/             # Modelos Eloquent
+│   ├── routes/
+│   │   ├── api.php             # Rutas API base
+│   │   ├── autenticacion.php   # Rutas de autenticación
+│   │   └── app/                # Rutas por módulo
+│   │       └── [modulo].php    # Rutas específicas del módulo
+│   └── database/
+│       ├── migrations/         # Migraciones de base de datos
+│       └── seeders/           # Seeders para datos iniciales
+│
+└── frontend/                   # Aplicación Vue.js
+    └── src/
+        ├── components/
+        │   ├── globales/       # Componentes reutilizables
+        │   └── vistas/         # Componentes específicos por módulo
+        ├── views/              # Vistas principales (páginas)
+        │   ├── app/            # Vistas autenticadas
+        │   └── autenticacion/  # Vistas de login
+        ├── layouts/            # Layouts de la aplicación
+        ├── stores/             # Stores de Pinia
+        └── services/           # Servicios de API
+```
+
+### Convenciones de Organización
+
+- **Backend**: Controladores y rutas organizados por módulo (ej: `[Modulo]/`)
+- **Frontend**: Componentes organizados por módulo en `components/vistas/[modulo]/`
+- **Rutas**: Cada módulo tiene su archivo de rutas en `backend/routes/app/[modulo].php`
+- **Vistas**: Cada módulo tiene sus vistas en `frontend/src/views/app/Vista[Modulo].vue`
+
+## Referencias
+
+Para convenciones específicas del backend, consultar: [`.cursor/rules/backend.mdc`](.cursor/rules/backend.mdc)
+Para convenciones específicas del frontend, consultar: [`.cursor/rules/frontend.mdc`](.cursor/rules/frontend.mdc)

@@ -1,0 +1,5 @@
+# robots.txt para CNERP - Sistema ERP Interno
+# Este es un sistema ERP interno, no debe ser indexado por motores de búsqueda
+
+User-agent: *
+Disallow: /

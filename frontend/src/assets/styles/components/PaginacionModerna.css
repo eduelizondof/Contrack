@@ -1,0 +1,126 @@
+.paginacion-moderna {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.paginacion-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.paginacion-btn:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--color-primary);
+}
+
+.paginacion-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.paginacion-btn .btn-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.paginacion-numeros {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.paginacion-numero {
+  min-width: 44px;
+  height: 44px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface-bg);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paginacion-numero:hover:not(:disabled):not(.active) {
+  border-color: var(--color-primary);
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--color-primary);
+}
+
+.paginacion-numero.active {
+  background: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+  font-weight: 600;
+}
+
+.paginacion-numero.ellipsis {
+  border: none;
+  background: transparent;
+  cursor: default;
+  min-width: auto;
+  padding: 0 0.5rem;
+}
+
+.paginacion-numero.ellipsis:hover {
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+}
+
+.paginacion-numero:disabled {
+  cursor: default;
+}
+
+/* Dark mode */
+html.dark .paginacion-btn:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.15);
+}
+
+html.dark .paginacion-numero:hover:not(:disabled):not(.active) {
+  background: rgba(59, 130, 246, 0.15);
+}
+
+@media (max-width: 640px) {
+  .paginacion-moderna {
+    gap: 0.25rem;
+  }
+  
+  .paginacion-numeros {
+    gap: 0.25rem;
+  }
+  
+  .paginacion-numero {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .paginacion-btn {
+    width: 40px;
+    height: 40px;
+  }
+}

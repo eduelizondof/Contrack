@@ -1,0 +1,51 @@
+/* Estilos personalizados para nprogress - Tenue y moderno */
+
+/* Barra de progreso principal */
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  background: linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6);
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5), 0 0 5px rgba(59, 130, 246, 0.3);
+}
+
+/* Spinner (opcional, más discreto) */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4), 0 0 5px rgba(59, 130, 246, 0.2);
+  opacity: 1;
+  transform: rotate(3deg) translate(0px, -4px);
+}
+
+/* Dark mode - Colores más suaves */
+:global(.dark) #nprogress .bar {
+  background: linear-gradient(90deg, #60a5fa, #93c5fd, #60a5fa);
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.4), 0 0 5px rgba(96, 165, 250, 0.2);
+}
+
+:global(.dark) #nprogress .peg {
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.3), 0 0 5px rgba(96, 165, 250, 0.15);
+}
+
+/* Animación suave */
+#nprogress .bar {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Mobile - Barra más delgada para pantallas pequeñas */
+@media (max-width: 768px) {
+  #nprogress .bar {
+    height: 1.5px;
+  }
+}

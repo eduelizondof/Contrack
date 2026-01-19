@@ -1,0 +1,331 @@
+---
+alwaysApply: true
+---
+
+# Reglas del Backend - Laravel
+
+## Estructura de Carpetas
+
+```
+backend/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/[Modulo]/Controlador[Nombre].php
+│   │   ├── Requests/[Modulo]/Solicitud[Accion][Recurso].php
+│   │   ├── Resources/[Modulo]/Recurso[Modelo].php
+│   │   └── Middleware/
+│   ├── Models/
+│   │   ├── BaseModel.php (modelo base con Activity Log)
+│   │   ├── User.php (mantener en inglés)
+│   │   └── [Modelo].php (extiende BaseModel)
+│   ├── Policies/[Modulo]/Politica[Modelo].php
+│   └── Services/[Modulo]/Servicio[Nombre].php (opcional)
+├── routes/
+│   ├── api.php
+│   ├── autenticacion.php
+│   └── app/[modulo].php
+└── database/
+    ├── migrations/
+    │   └── [Modulo]/ (organizadas por módulo)
+    └── seeders/[Modulo][Nombre]Seeder.php
+```
+
+## Convenciones de Nomenclatura
+
+### Controladores
+- **Formato**: `Controlador[Nombre]` (PascalCase)
+- **Ubicación**: `app/Http/Controllers/[Modulo]/Controlador[Nombre].php`
+- **Namespace**: `App\Http\Controllers\[Modulo]`
+- **Extiende**: `App\Http\Controllers\Controller`
+
+### Requests
+- **Formato**: `Solicitud[Accion][Recurso]` (PascalCase)
+- **Ubicación**: `app/Http/Requests/[Modulo]/Solicitud[Accion][Recurso].php`
+- **Ejemplo**: `SolicitudLogin`, `SolicitudCrear[Modelo]`, `SolicitudActualizar[Modelo]`
+
+### Resources
+- **Formato**: `Recurso[Modelo]` (PascalCase)
+- **Ubicación**: `app/Http/Resources/[Modulo]/Recurso[Modelo].php`
+
+### Models
+- **Formato**: PascalCase en español
+- **Ubicación**: `app/Models/[Modelo].php`
+- **Extiende**: `App\Models\BaseModel` (NO extender Model directamente)
+- **Excepción**: `User.php` se mantiene en inglés, extiende `Authenticatable`
+- **Ejemplo**: `[Modelo].php`
+
+### BaseModel
+- **Ubicación**: `app/Models/BaseModel.php`
+- **Funcionalidad**: 
+  - SoftDeletes
+  - Activity Log (Spatie) configurado automáticamente
+  - Timestamps personalizados: `creado_el`, `actualizado_el`, `eliminado_el`
+- **Uso**: Todos los modelos nuevos deben extender `BaseModel`
+
+### Policies
+- **Formato**: `Politica[Modelo]` (PascalCase)
+- **Ubicación**: `app/Policies/[Modulo]/Politica[Modelo].php`
+
+### Services
+- **Formato**: `Servicio[Nombre]` (PascalCase)
+- **Ubicación**: `app/Services/[Modulo]/Servicio[Nombre].php`
+- **Uso**: Lógica de negocio compleja
+
+### Seeders
+- **Formato**: `[Modulo][Nombre]Seeder` (PascalCase)
+- **Ubicación**: `database/seeders/[Modulo][Nombre]Seeder.php`
+
+### Migrations
+- **Formato**: `[timestamp]_[accion]_[tabla]_table.php` (snake_case)
+- **Ubicación**: `database/migrations/[Modulo]/` (organizadas por módulo)
+- **Blueprint Auditable**: Siempre usar `$table->auditable()` en lugar de `timestamps()` y `softDeletes()`
+- **Ejemplo**: `database/migrations/[Modulo]/[timestamp]_create_[tabla]_table.php`
+
+### Rutas
+- **Archivos**: `routes/app/[modulo].php` (snake_case)
+- **Nombres**: `[modulo].[accion]` (ej: `[modulo].index`, `autenticacion.login`)
+
+## BaseModel y Activity Log
+
+### BaseModel
+Todos los modelos deben extender `BaseModel` que incluye:
+- **SoftDeletes**: Eliminación suave
+- **Activity Log**: Registro automático de cambios (crear, actualizar, eliminar)
+- **Timestamps personalizados**: `creado_el`, `actualizado_el`, `eliminado_el`
+
+### Ejemplo de Modelo
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class [Modelo] extends BaseModel
+{
+    use HasFactory;
+
+    protected $fillable = [
+        // campos fillable
+    ];
+
+    protected $casts = [
+        // casts
+    ];
+
+    // relaciones
+}
+```
+
+**Nota**: `BaseModel` registra automáticamente todos los cambios en Activity Log usando los campos `fillable`.
+
+## Migraciones con Blueprint Auditable
+
+### BlueprintProvider
+El `BlueprintProvider` registra macros para timestamps personalizados:
+- `$table->auditable()` - Agrega `creado_el`, `actualizado_el`, `eliminado_el`
+- `$table->dropAuditable()` - Elimina las columnas auditable
+
+### Ejemplo de Migración
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('[tabla]', function (Blueprint $table) {
+            $table->id();
+            // columnas
+            
+            // Usar blueprint auditable en lugar de timestamps() y softDeletes()
+            $table->auditable();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('[tabla]');
+    }
+};
+```
+
+**IMPORTANTE**: 
+- Siempre usar `$table->auditable()` en nuevas migraciones de módulos
+- NO usar `$table->timestamps()` ni `$table->softDeletes()` por separado en migraciones de módulos
+- Las migraciones se organizan por módulo en `database/migrations/[Modulo]/`
+- **Excepción**: Las migraciones del sistema/framework (users, cache, jobs, permissions, activity_log, personal_access_tokens) pueden usar `timestamps()` ya que son generadas por Laravel o paquetes externos
+
+## Organización de Migraciones por Módulo
+
+### Estructura
+```
+database/migrations/
+├── [timestamp]_create_users_table.php (sistema)
+├── [Modulo]/
+│   ├── [timestamp]_create_[tabla]_table.php
+│   └── [timestamp]_add_[campo]_to_[tabla]_table.php
+└── [OtroModulo]/
+    └── [timestamp]_create_[tabla]_table.php
+```
+
+### AppServiceProvider
+El `AppServiceProvider` carga automáticamente todas las migraciones de subcarpetas, permitiendo organización por módulos.
+
+## Métodos de Controladores
+
+### Convenciones
+- `index()` - Listar recursos
+- `mostrar($id)` - Mostrar recurso específico
+- `almacenar(Request $request)` - Crear recurso
+- `actualizar(Request $request, $id)` - Actualizar recurso
+- `eliminar($id)` - Eliminar recurso
+
+### Tipos de Retorno
+- Usar `JsonResponse` para respuestas explícitas
+- Usar Resources para formatear modelos
+
+## Estructura de Respuestas API
+
+### Éxito Simple
+```php
+return response()->json([
+    'mensaje' => 'Operación exitosa',
+    'datos' => new RecursoModelo($modelo),
+]);
+```
+
+### Lista Paginada
+```php
+return response()->json([
+    'datos' => RecursoModelo::collection($modelos),
+    'meta' => [
+        'total' => $modelos->total(),
+        'por_pagina' => $modelos->perPage(),
+        'pagina_actual' => $modelos->currentPage(),
+    ],
+]);
+```
+
+### Códigos HTTP
+- `200`: Éxito, `201`: Creado, `204`: Sin contenido
+- `400`: Solicitud incorrecta, `401`: No autenticado, `403`: No autorizado
+- `404`: No encontrado, `422`: Error de validación, `500`: Error del servidor
+
+## Autenticación
+
+### Sanctum SPA
+- Autenticación stateful con cookies
+- CSRF tokens requeridos para POST/PUT/DELETE
+- Middleware `auth:sanctum` para rutas protegidas
+
+### Controlador de Autenticación
+- **Ubicación**: `app/Http/Controllers/Autenticacion/ControladorAutenticacion.php`
+- **Métodos**: `login()`, `logout()`
+- **No incluir**: Registro público ni recuperación de contraseña (sistema interno)
+
+## Permisos y Autorización
+
+### Spatie Permission
+- Modelo `User` se mantiene en inglés
+- Permisos y roles gestionados por Spatie
+- Usar Policies para autorización granular
+
+## Crear Nuevo Módulo
+
+### Pasos Completos
+
+1. **Crear estructura de carpetas**:
+   ```
+   app/Http/Controllers/[Modulo]/
+   app/Http/Requests/[Modulo]/
+   app/Http/Resources/[Modulo]/
+   database/migrations/[Modulo]/
+   ```
+
+2. **Crear Controlador**:
+   - `app/Http/Controllers/[Modulo]/Controlador[Nombre].php`
+   - Extiende `App\Http\Controllers\Controller`
+
+3. **Crear Requests**:
+   - `app/Http/Requests/[Modulo]/SolicitudCrear[Modelo].php`
+   - `app/Http/Requests/[Modulo]/SolicitudActualizar[Modelo].php`
+
+4. **Crear Resource**:
+   - `app/Http/Resources/[Modulo]/Recurso[Modelo].php`
+
+5. **Crear Modelo**:
+   - `app/Models/[Modelo].php`
+   - **IMPORTANTE**: Extiende `App\Models\BaseModel` (NO `Model`)
+   - Define `$fillable` y `$casts`
+
+6. **Crear Migración**:
+   - `php artisan make:migration create_[tabla]_table --path=database/migrations/[Modulo]`
+   - Usar `$table->auditable()` en lugar de `timestamps()` y `softDeletes()`
+
+7. **Crear Rutas**:
+   - `routes/app/[modulo].php`
+   - Cargar en `bootstrap/app.php`:
+     ```php
+     Route::middleware('api')
+         ->prefix('api')
+         ->group(base_path('routes/app/[modulo].php'));
+     ```
+
+8. **Opcional**:
+   - Crear Policy: `app/Policies/[Modulo]/Politica[Modelo].php`
+   - Crear Seeder: `database/seeders/[Modulo][Nombre]Seeder.php`
+   - Crear Service si la lógica es compleja
+
+## Consideraciones Especiales
+
+### Modelo User
+- **Mantener en inglés**: `User.php`, namespace `App\Models\User`
+- **Razón**: Compatibilidad con Spatie Permission y Laravel
+- **NO extiende BaseModel**: Extiende `Authenticatable`
+
+### Activity Log
+- Se registra automáticamente en todos los modelos que extienden `BaseModel`
+- Registra: crear, actualizar, eliminar, restaurar
+- Usa el nombre de la tabla como log name
+- Solo registra cambios en campos `fillable`
+
+### Mensajes
+- Todos los mensajes al usuario en español
+- Mensajes de validación en español
+- Respuestas API con mensajes en español
+
+## Archivos que NO Cambian
+
+- `app/Http/Controllers/Controller.php` (clase base)
+- `app/Models/User.php` (compatibilidad Spatie)
+- `app/Models/BaseModel.php` (modelo base)
+- Archivos de configuración (`config/*`)
+- Archivos de framework (`bootstrap/*`, `public/*`)
+
+## Resumen de Convenciones
+
+### Estructura
+- **Controladores**: `app/Http/Controllers/[Modulo]/Controlador[Nombre].php`
+- **Requests**: `app/Http/Requests/[Modulo]/Solicitud[Accion][Recurso].php`
+- **Resources**: `app/Http/Resources/[Modulo]/Recurso[Modelo].php`
+- **Models**: `app/Models/[Modelo].php` (extiende `BaseModel`)
+- **Migrations**: `database/migrations/[Modulo]/[timestamp]_[accion]_[tabla]_table.php`
+- **Routes**: `routes/app/[modulo].php`
+
+### Nomenclatura
+- PascalCase para clases
+- snake_case para archivos de rutas y migraciones
+- Español para nombres de clases y mensajes
+
+### Reglas Importantes
+1. **Todos los modelos extienden `BaseModel`** (excepto `User`)
+2. **Siempre usar `$table->auditable()` en migraciones**
+3. **Organizar migraciones por módulo en subcarpetas**
+4. **Activity Log se configura automáticamente en BaseModel**
+5. **Mensajes siempre en español**

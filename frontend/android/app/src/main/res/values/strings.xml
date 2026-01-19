@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ConectivaERP</string>
+    <string name="title_activity_main">ConectivaERP</string>
+    <string name="package_name">conectivaits.app</string>
+    <string name="custom_url_scheme">conectivaits.app</string>
+</resources>

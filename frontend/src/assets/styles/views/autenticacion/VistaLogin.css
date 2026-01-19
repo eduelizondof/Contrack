@@ -1,0 +1,284 @@
+/* Estilos para el formulario de login con glass effect */
+
+.login-main {
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+}
+
+/* Form card con glass effect mejorado */
+.login-form-card {
+  width: 100%;
+  /* Transparencia más visible para efecto glass */
+  background: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.15),
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.6);
+  position: relative;
+  overflow: hidden;
+  /* Asegurar que el efecto glass funcione */
+  isolation: isolate;
+}
+
+.login-form-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 24px;
+}
+
+.login-form-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Header con logo y título */
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-logo-container {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.5rem;
+  border-radius: 16px;
+  background: linear-gradient(to bottom right, #3B82F6, #06B6D4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+  padding: 12px;
+}
+
+.login-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* En light mode usar icono-bco (blanco) porque el background es azul */
+.light-logo {
+  display: block;
+}
+
+.dark-logo {
+  display: none;
+}
+
+/* En dark mode usar icono normal (coloreado) */
+.dark .light-logo {
+  display: none;
+}
+
+.dark .dark-logo {
+  display: block;
+}
+
+.login-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.login-subtitle {
+  font-size: 0.875rem;
+  color: #6B7280;
+  margin: 0;
+  text-align: center;
+}
+
+/* Form dentro del card */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.login-checkbox-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.5rem 0;
+  font-size: 0.875rem;
+}
+
+.login-forgot-link {
+  color: #6B7280;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+  cursor: help;
+}
+
+.login-forgot-link:hover {
+  color: #3B82F6;
+}
+
+/* Submit button */
+.login-submit-btn {
+  background: var(--color-primary);
+  color: #ffffff;
+  border: none;
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 1rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+}
+
+.login-submit-btn:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+}
+
+.login-submit-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.login-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading spinner */
+.login-loading-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.login-spinner {
+  width: 20px;
+  height: 20px;
+  animation: login-spin 1s linear infinite;
+}
+
+.login-spinner-circle {
+  opacity: 0.25;
+}
+
+.login-spinner-path {
+  opacity: 0.75;
+}
+
+@keyframes login-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error message */
+.login-error-message {
+  background: #FEE2E2;
+  color: #DC2626;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  border: 1px solid #FCA5A5;
+}
+
+/* Theme toggle al centro dentro del card */
+.login-theme-toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dark .login-theme-toggle-container {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dark mode styles */
+.dark .login-form-card {
+  /* Transparencia más visible para efecto glass en dark mode */
+  background: rgba(21, 23, 37, 0.6) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.dark .login-form-card::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+}
+
+.dark .login-title {
+  color: #FFFFFF;
+}
+
+.dark .login-subtitle {
+  color: #9CA3AF;
+}
+
+.dark .login-forgot-link {
+  color: #9CA3AF;
+}
+
+.dark .login-forgot-link:hover {
+  color: #60A5FA;
+}
+
+.dark .login-error-message {
+  background: #7F1D1D;
+  color: #FCA5A5;
+  border-color: #DC2626;
+}

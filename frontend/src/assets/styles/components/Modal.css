@@ -1,0 +1,365 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: var(--color-surface-bg);
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 2rem);
+  width: 100%;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+
+/* Tamaños - Ahora son más flexibles y crecen con la pantalla */
+.modal-sm {
+  max-width: min(400px, calc(100vw - 2rem));
+}
+
+.modal-md {
+  max-width: min(600px, calc(100vw - 2rem));
+}
+
+.modal-lg {
+  max-width: min(800px, calc(100vw - 2rem));
+}
+
+.modal-xl {
+  max-width: min(1200px, calc(100vw - 2rem));
+}
+
+.modal-fullscreen {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  border-radius: 0;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .modal-overlay {
+    padding: 1.5rem;
+  }
+
+  .modal-content {
+    max-height: calc(100vh - 3rem);
+  }
+
+  .modal-sm {
+    max-width: min(450px, calc(100vw - 3rem));
+  }
+
+  .modal-md {
+    max-width: min(700px, calc(100vw - 3rem));
+  }
+
+  .modal-lg {
+    max-width: min(900px, calc(100vw - 3rem));
+  }
+
+  .modal-xl {
+    max-width: min(1400px, calc(100vw - 3rem));
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .modal-overlay {
+    padding: 2rem;
+  }
+
+  .modal-content {
+    max-height: calc(100vh - 4rem);
+  }
+
+  .modal-sm {
+    max-width: min(500px, calc(100vw - 4rem));
+  }
+
+  .modal-md {
+    max-width: min(800px, calc(100vw - 4rem));
+  }
+
+  .modal-lg {
+    max-width: min(1000px, calc(100vw - 4rem));
+  }
+
+  .modal-xl {
+    max-width: min(1600px, calc(100vw - 4rem));
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+  background: var(--color-surface-bg);
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin: 0;
+}
+
+.modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.modal-close:hover {
+  background-color: var(--color-background-mute);
+  color: var(--color-primary);
+}
+
+.modal-close .icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1.5rem;
+  min-height: 0;
+}
+
+/* Grid responsivo para formularios dentro del modal */
+.modal-body .form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+/* Clase para campos que ocupan todo el ancho */
+.modal-body .form-group-full {
+  grid-column: 1 / -1;
+}
+
+/* Tablet: 2 columnas */
+@media (min-width: 768px) {
+  .modal-body .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop: 3 columnas para modales grandes */
+@media (min-width: 1024px) {
+  .modal-lg .modal-body .form-grid,
+  .modal-xl .modal-body .form-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Para formularios que quieran usar 2 columnas incluso en desktop */
+.modal-body .form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .modal-body .form-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  flex-shrink: 0;
+  background: var(--color-surface-bg);
+}
+
+/* Scrollbar styling */
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-hover);
+}
+
+/* Transiciones */
+.modal-enter-active,
+.modal-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-enter-from .modal-content,
+.modal-leave-to .modal-content {
+  transform: scale(0.95) translateY(-20px);
+  opacity: 0;
+}
+
+.modal-enter-from .modal-overlay,
+.modal-leave-to .modal-overlay {
+  opacity: 0;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+}
+
+.modal-enter-active .modal-overlay,
+.modal-leave-active .modal-overlay {
+  transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+/* Dark mode */
+html.dark .modal-content {
+  background: var(--color-surface-bg);
+  border-color: var(--color-border);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+}
+
+html.dark .modal-header {
+  background: var(--color-surface-bg);
+  border-bottom-color: var(--color-border);
+}
+
+html.dark .modal-title {
+  color: var(--color-heading);
+}
+
+html.dark .modal-close {
+  color: var(--color-text-muted);
+}
+
+html.dark .modal-close:hover {
+  background-color: var(--color-background-mute);
+  color: var(--color-primary);
+}
+
+html.dark .modal-body::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+}
+
+html.dark .modal-body::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-hover);
+}
+
+html.dark .modal-footer {
+  border-top-color: var(--color-border);
+  background: var(--color-surface-bg);
+}
+
+/* Estilos para botones en el footer del modal */
+.modal-footer .btn-cancelar {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface-bg);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-footer .btn-cancelar:hover {
+  border-color: var(--color-text-muted);
+  background: var(--color-background-mute);
+}
+
+.modal-footer .btn-guardar {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  background: var(--color-primary);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-footer .btn-guardar:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.modal-footer .btn-guardar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.modal-footer .btn-eliminar {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-footer .btn-eliminar:hover:not(:disabled) {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.modal-footer .btn-eliminar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 640px) {
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .modal-footer .btn-cancelar,
+  .modal-footer .btn-guardar,
+  .modal-footer .btn-eliminar {
+    width: 100%;
+  }
+}

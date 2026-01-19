@@ -1,0 +1,790 @@
+---
+alwaysApply: true
+---
+
+# Reglas del Frontend - Vue.js 3
+
+## Estructura de Carpetas
+
+```
+frontend/src/
+├── components/
+│   ├── globales/          # Componentes reutilizables en toda la app
+│   │   ├── iconos/        # Iconos SVG reutilizables
+│   │   ├── inputs/        # Componentes de formulario (TextInput, PasswordInput, etc.)
+│   │   ├── modales/       # Modales globales (si los hay)
+│   │   └── [Componente].vue  # Otros componentes globales
+│   └── vistas/            # Componentes específicos de vistas
+│       └── [modulo]/       # Carpeta por módulo
+│           └── [Componente].vue  # Componentes específicos
+├── composables/           # Composables reutilizables (lógica compartida)
+│   ├── useApi.js          # Composable para llamadas API
+│   ├── usePlatform.js     # Detección de plataforma (web/mobile)
+│   ├── useForm.js         # Manejo de formularios
+│   ├── useProgress.js     # Barra de progreso (nprogress)
+│   └── usePermissions.js  # Verificación de permisos
+├── layouts/               # Plantillas de la aplicación
+│   ├── PlantillaApp.vue   # Plantilla principal de la app
+│   └── PlantillaLogin.vue # Plantilla de autenticación
+├── views/                 # Vistas principales (páginas)
+│   ├── app/               # Vistas de la aplicación autenticada
+│   └── autenticacion/     # Vistas de autenticación
+├── stores/                # Stores de Pinia
+│   ├── auth.js            # Store de autenticación
+│   ├── theme.js           # Store de tema
+│   └── errors.js          # Store de errores globales (opcional)
+├── services/              # Servicios de API
+│   ├── api.js             # Configuración base de API
+│   ├── auth.js            # Servicio de autenticación
+│   ├── csrf.js            # Manejo de CSRF
+│   └── [modulo].js        # Servicios por módulo
+└── assets/                # Assets estáticos
+    └── styles/            # Estilos globales
+        ├── base/          # Estilos base
+        ├── nprogress.css  # Estilos de barra de progreso
+        └── views/         # Estilos específicos de vistas
+            └── [dominio]/ # Carpeta por dominio
+```
+
+## Convenciones de Nomenclatura
+
+### Vistas
+- **Formato**: `Vista[Nombre]` (PascalCase)
+- **Ubicación**: `views/[modulo]/Vista[Nombre].vue`
+- **Ejemplo**: `views/app/VistaInicio.vue`, `views/autenticacion/VistaLogin.vue`
+
+### Componentes Globales
+- **Formato**: PascalCase en español
+- **Ubicación**: `components/globales/[categoria]/[Nombre].vue`
+- **Categorías**: `iconos/`, `inputs/`, `modales/`
+- **Ejemplo**: `components/globales/iconos/EmailIcon.vue`, `components/globales/inputs/TextInput.vue`
+
+### Componentes de Vista
+- **Formato**: PascalCase descriptivo
+- **Ubicación**: `components/vistas/[modulo]/[Nombre].vue`
+- **Ejemplo**: `components/vistas/[modulo]/Tabla[Nombre].vue`, `components/vistas/[modulo]/Formulario[Nombre].vue`
+- **Uso**: Componentes que solo se usan en una vista específica para mantener archivos pequeños
+
+### Stores
+- **Formato**: camelCase en español (ej: `auth.js`, `theme.js`, `[modulo].js`)
+- **Ubicación**: `stores/[nombre].js`
+- **Nombres de funciones**: En español (ej: `inicializar()`, `cerrarSesion()`, `obtener[Nombre]()`)
+
+### Services
+- **Formato**: camelCase (ej: `api.js`, `auth.js`, `[modulo].js`)
+- **Ubicación**: `services/[nombre].js`
+- **Organización**: Un servicio por módulo cuando sea necesario
+
+### Composables
+- **Formato**: camelCase con prefijo `use` (ej: `useApi.js`, `usePlatform.js`, `useForm.js`)
+- **Ubicación**: `composables/[nombre].js`
+- **Uso**: Lógica reutilizable que puede ser compartida entre componentes
+
+## Reglas para Stores
+
+### Estructura Base
+```javascript
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+
+export const use[Nombre]Store = defineStore('[nombre]', () => {
+  // Estado
+  const [estado] = ref(valorInicial)
+  
+  // Getters
+  const [getter] = computed(() => /* lógica */)
+  
+  // Acciones
+  async function [accion]() {
+    // lógica
+  }
+  
+  return {
+    [estado],
+    [getter],
+    [accion],
+  }
+})
+```
+
+### Store de Autenticación (auth.js)
+- **Estado**: `usuario`, `cargando`, `autenticado`
+- **Getters**: `estaAutenticado` (computed)
+- **Acciones**: `inicializar()`, `login()`, `logout()`
+- **Inicialización**: En `main.js` antes de montar la app
+
+### Store de Tema (theme.js)
+- **Estado**: `theme` ('light'|'dark'|'system'), `currentTheme` (resuelto)
+- **Acciones**: `initializeTheme()`, `setTheme()`, `toggleTheme()`
+- **Inicialización**: En `main.js` antes de montar la app
+
+## Reglas para Componentes
+
+### Script Setup (Estándar)
+```vue
+<script setup>
+import { ref, computed } from 'vue'
+// imports
+
+// Props
+const props = defineProps({
+  // props tipadas
+})
+
+// Emits
+defineEmits(['evento1', 'evento2'])
+
+// Lógica del componente
+</script>
+```
+
+### Props
+- Siempre tipadas cuando sea posible
+- Usar objetos de definición completos con `type`, `default`, `required`
+
+### Emits
+- Definir explícitamente todos los eventos emitidos
+- Usar `defineEmits(['evento'])` para eventos simples
+
+### Estilos
+- **Scoped por defecto**: `<style scoped>`
+- **Separación**: Si un componente excede ~200 líneas de CSS, extraer a:
+  - `assets/styles/components/[NombreComponente].css` para componentes globales
+  - `assets/styles/views/[dominio]/[NombreVista].css` para vistas (organizado por dominio)
+- **Dark mode**: Usar `:global(.dark)` para estilos de tema oscuro
+
+## Reglas para Vistas
+
+### Estructura
+```vue
+<template>
+  <[Layout]>
+    <!-- Contenido de la vista -->
+  </[Layout]>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+import { use[Nombre]Store } from '@/stores/[nombre]'
+import [Layout] from '@/layouts/[Layout].vue'
+// Componentes específicos de la vista
+import [Componente] from '@/components/vistas/[modulo]/[Componente].vue'
+
+// Lógica de la vista
+</script>
+
+<style scoped>
+/* Estilos específicos de la vista */
+</style>
+```
+
+### Separación de Componentes
+- Si una vista excede ~300 líneas, extraer secciones a componentes específicos
+- Colocar componentes específicos en `components/vistas/[modulo]/`
+
+## Lineamientos de Diseño Visual
+
+### Encabezados
+- Cada vista debe tener un encabezado claro con título (`h1.page-title`) y subtítulo descriptivo (`p.page-subtitle`).
+- Los encabezados pueden incluir acciones principales (ej: botón "Nuevo").
+
+### Listados y Grillas
+- **Evitar Tablas**: No usar elementos `<table>` tradicionales para listados principales.
+- **Uso de Cards y Filas**: Los listados deben presentarse como una colección de filas o tarjetas con diseño responsivo y premium.
+- Cada fila debe tener acciones claras (Ver, Editar, Eliminar) con micro-animaciones en hover.
+
+### Vistas de Detalle
+- **Secciones Colapsables**: Organizar la información en secciones lógicas usando componentes colapsables.
+- Cada sección debe tener un título y subtítulo claro. Las acciones de guardado deben ser específicas por sección cuando sea posible.
+- **Secciones**: Usar un espaciado consistente entre bloques de contenido para mantener la armonía visual.
+
+### Estética Premium
+- **Bordes y Sombras**: Usar bordes redondeados (`12px` - `16px`) y sombras muy sutiles.
+- **Micro-animaciones**: Transiciones suaves en transiciones de estado, hovers y aperturas de modales o secciones.
+
+## Reglas para Plantillas (Layouts)
+
+### Estructura
+```vue
+<template>
+  <div class="plantilla-container">
+    <Encabezado />
+    <main>
+      <slot />
+    </main>
+    <MenuPie />
+  </div>
+</template>
+
+<script setup>
+import Encabezado from '@/components/globales/Encabezado.vue'
+import MenuPie from '@/components/globales/MenuPie.vue'
+// Lógica de la plantilla
+</script>
+
+<style scoped>
+@import '@/assets/styles/layouts/PlantillaApp.css';
+</style>
+```
+
+### Plantillas Disponibles
+- **PlantillaApp**: Plantilla principal para vistas autenticadas
+- **PlantillaLogin**: Plantilla para páginas de autenticación
+
+## Imports
+
+### Paths
+- Usar alias `@/` para imports desde `src/`
+- Ejemplo: `import Componente from '@/components/globales/Componente.vue'`
+
+### Orden de Imports
+1. Vue y librerías externas
+2. Stores
+3. Services
+4. Composables
+5. Layouts
+6. Componentes globales
+7. Componentes de vista
+8. Estilos
+
+## Ejemplos Prácticos
+
+### Crear Nueva Vista
+1. Crear `views/[modulo]/Vista[Nombre].vue`
+2. Agregar ruta en `router/index.js`
+3. Usar `PlantillaApp` para vistas autenticadas: `import PlantillaApp from '@/layouts/PlantillaApp.vue'`
+4. Si necesita componentes específicos, crear en `components/vistas/[modulo]/`
+
+### Crear Componente Global
+1. Determinar categoría (iconos, inputs, modales)
+2. Crear en `components/globales/[categoria]/[Nombre].vue`
+3. Usar en cualquier vista o componente
+
+### Crear Componente de Vista
+1. Crear en `components/vistas/[modulo]/[Nombre].vue`
+2. Importar solo en la vista que lo necesita
+3. Mantener lógica específica del módulo
+
+### Crear Store
+1. Crear `stores/[nombre].js`
+2. Usar Composition API de Pinia
+3. Nombres de funciones en español
+4. Si es crítico (auth, theme), inicializar en `main.js`
+
+### Crear Composable
+1. Crear `composables/use[Nombre].js`
+2. Usar prefijo `use` en el nombre
+3. Exportar función que retorne objetos reactivos
+4. Usar para lógica reutilizable entre componentes
+
+## Variables de Entorno
+
+### Variables Requeridas
+
+Crear archivo `.env` en la raíz de `frontend/`:
+
+```env
+# API Configuration
+VITE_API_BASE_URL=http://localhost:8000/api
+```
+
+### Configuración para Capacitor
+
+En `capacitor.config.json`, configurar `server.url` para desarrollo:
+
+```json
+{
+  "appId": "[appId]",
+  "appName": "[AppName]",
+  "webDir": "dist",
+  "server": {
+    "url": "http://localhost:5173",
+    "cleartext": true
+  }
+}
+```
+
+**Nota**: En producción, eliminar `server.url` para usar el bundle local.
+
+### Detección de Plataforma
+
+Usar el composable `usePlatform` para detectar si se ejecuta en web o mobile:
+
+```javascript
+import { usePlatform } from '@/composables/usePlatform'
+
+const { isMobile, isWeb, platform } = usePlatform()
+```
+
+## Capacitor.js - Consideraciones Mobile
+
+### Configuración Base
+
+- **Archivo**: `capacitor.config.json` en la raíz de `frontend/`
+- **webDir**: Debe apuntar a `dist` (resultado del build)
+- **server.url**: Solo para desarrollo, eliminar en producción
+
+### Detección de Plataforma
+
+Siempre verificar la plataforma antes de usar APIs nativas:
+
+```javascript
+import { Capacitor } from '@capacitor/core'
+
+if (Capacitor.isNativePlatform()) {
+  // Código específico para mobile
+}
+```
+
+### Manejo de URLs Dinámicas
+
+En mobile, las URLs deben ser absolutas. Usar variables de entorno:
+
+```javascript
+const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'
+```
+
+### Build para Mobile
+
+```bash
+# 1. Build de producción
+npm run build
+
+# 2. Sincronizar con Capacitor
+npx cap sync
+
+# 3. Abrir en Android Studio / Xcode
+npx cap open android
+# o
+npx cap open ios
+```
+
+## Permisos y Guards de Router
+
+### Meta Fields en Rutas
+
+Usar `meta` para definir permisos y roles requeridos:
+
+```javascript
+{
+  path: '/[ruta]',
+  name: '[nombre]',
+  component: () => import('@/views/app/Vista[Nombre].vue'),
+  meta: {
+    requiereAuth: true,
+    permisos: ['[modulo].ver'],
+    roles: ['[rol]']
+  }
+}
+```
+
+### Guards con Permisos
+
+El router debe verificar permisos usando Spatie Permission:
+
+```javascript
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
+  
+  // Verificar autenticación
+  if (to.meta.requiereAuth && !authStore.estaAutenticado) {
+    return next({ name: 'login', query: { redirect: to.fullPath } })
+  }
+  
+  // Verificar permisos
+  if (to.meta.permisos) {
+    const tienePermiso = await authStore.tienePermiso(to.meta.permisos)
+    if (!tienePermiso) {
+      return next({ name: 'inicio' })
+    }
+  }
+  
+  // Verificar roles
+  if (to.meta.roles) {
+    const tieneRol = authStore.tieneRol(to.meta.roles)
+    if (!tieneRol) {
+      return next({ name: 'inicio' })
+    }
+  }
+  
+  next()
+})
+```
+
+## Manejo de Errores
+
+### Store de Errores (Opcional)
+
+Para errores globales, crear `stores/errors.js`:
+
+```javascript
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+
+export const useErrorsStore = defineStore('errors', () => {
+  const errores = ref([])
+  
+  function agregarError(error) {
+    errores.value.push({
+      id: Date.now(),
+      mensaje: error.message || 'Error desconocido',
+      tipo: error.tipo || 'error',
+      timestamp: new Date()
+    })
+  }
+  
+  function limpiarErrores() {
+    errores.value = []
+  }
+  
+  return { errores, agregarError, limpiarErrores }
+})
+```
+
+### Manejo de Errores en Servicios
+
+Los servicios deben manejar errores de forma consistente:
+
+```javascript
+try {
+  const response = await api.get('/endpoint')
+  return response.data
+} catch (error) {
+  if (error.response) {
+    // Error de API
+    throw new Error(error.response.data.message || 'Error en la solicitud')
+  } else if (error.request) {
+    // Error de red (importante para mobile)
+    throw new Error('Error de conexión. Verifica tu internet.')
+  } else {
+    throw error
+  }
+}
+```
+
+### Estados de Carga y Error en Componentes
+
+Usar estados consistentes:
+
+```vue
+<template>
+  <div v-if="cargando">Cargando...</div>
+  <div v-else-if="error">{{ error }}</div>
+  <div v-else>
+    <!-- Contenido -->
+  </div>
+</template>
+```
+
+## Composables Comunes
+
+### useApi
+
+Composable para manejar llamadas API con estados:
+
+```javascript
+import { ref } from 'vue'
+import api from '@/services/api'
+
+export function useApi() {
+  const datos = ref(null)
+  const cargando = ref(false)
+  const error = ref(null)
+  
+  async function ejecutar(peticion) {
+    cargando.value = true
+    error.value = null
+    try {
+      const response = await peticion()
+      datos.value = response.data
+      return response.data
+    } catch (err) {
+      error.value = err.message || 'Error desconocido'
+      throw err
+    } finally {
+      cargando.value = false
+    }
+  }
+  
+  return { datos, cargando, error, ejecutar }
+}
+```
+
+### usePlatform
+
+Composable para detectar plataforma:
+
+```javascript
+import { ref, onMounted } from 'vue'
+import { Capacitor } from '@capacitor/core'
+
+export function usePlatform() {
+  const isMobile = ref(false)
+  const isWeb = ref(false)
+  const platform = ref('web')
+  
+  onMounted(() => {
+    isMobile.value = Capacitor.isNativePlatform()
+    isWeb.value = !isMobile.value
+    platform.value = Capacitor.getPlatform()
+  })
+  
+  return { isMobile, isWeb, platform }
+}
+```
+
+### useForm
+
+Composable para manejo de formularios:
+
+```javascript
+import { ref } from 'vue'
+
+export function useForm(initialValues = {}) {
+  const form = ref({ ...initialValues })
+  const errores = ref({})
+  const cargando = ref(false)
+  
+  function reset() {
+    form.value = { ...initialValues }
+    errores.value = {}
+  }
+  
+  function setError(campo, mensaje) {
+    errores.value[campo] = mensaje
+  }
+  
+  function limpiarErrores() {
+    errores.value = {}
+  }
+  
+  return { form, errores, cargando, reset, setError, limpiarErrores }
+}
+```
+
+### useProgress
+
+Composable para manejar la barra de progreso con nprogress.
+
+**Ubicación**: `composables/useProgress.js`
+
+**Configuración en Router**:
+
+El router debe configurar nprogress y manejarlo automáticamente:
+
+```javascript
+import NProgress from 'nprogress'
+
+// Configurar nprogress
+NProgress.configure({
+  showSpinner: false,
+  minimum: 0.08,
+  easing: 'ease',
+  speed: 400,
+  trickle: true,
+  trickleRate: 0.02,
+  trickleSpeed: 200
+})
+
+// En router.beforeEach - Iniciar solo en navegaciones reales
+router.beforeEach(async (to, from, next) => {
+  if (from.name !== null) {
+    NProgress.start()
+  }
+  // ... resto de la lógica
+  next()
+})
+
+// En router.afterEach - Completar después de navegación
+router.afterEach(() => {
+  NProgress.done()
+})
+```
+
+**Uso del Composable**:
+
+```javascript
+import { useProgress } from '@/composables/useProgress'
+
+const { start, set, inc, done, remove } = useProgress()
+
+// Uso básico - Iniciar y completar
+async function cargarDatos() {
+  start()
+  try {
+    const datos = await api.get('/endpoint-lento')
+    // ... procesar datos
+  } finally {
+    done()
+  }
+}
+```
+
+## Mejores Prácticas
+
+### Autenticación con Sanctum
+
+1. **CSRF Token**: Siempre obtener antes de POST/PUT/DELETE
+   ```javascript
+   await getCsrfToken()
+   await api.post('/endpoint', data)
+   ```
+
+2. **Cookies**: Usar `withCredentials: true` en todas las peticiones
+3. **Tokens**: Si se usa token-based auth, almacenar en localStorage solo si es necesario
+4. **Logout**: Limpiar cookies y localStorage al cerrar sesión
+
+### Manejo de Estado
+
+1. **Stores**: Usar para estado global compartido
+2. **Composables**: Usar para lógica reutilizable
+3. **Props/Emits**: Usar para comunicación padre-hijo
+4. **Provide/Inject**: Usar para datos compartidos en árbol de componentes
+
+### Performance
+
+1. **Lazy Loading**: Usar `() => import()` para rutas y componentes pesados
+2. **Computed**: Usar para valores derivados reactivos
+3. **v-memo**: Usar para listas grandes con Vue 3.2+
+4. **Code Splitting**: Separar código por módulos cuando sea posible
+
+### Mobile (Capacitor)
+
+1. **Detección de Plataforma**: Siempre verificar antes de usar APIs nativas
+2. **URLs Absolutas**: Usar URLs completas en mobile
+3. **Offline**: Considerar manejo de estado offline
+4. **Performance**: Optimizar imágenes y assets para mobile
+5. **Testing**: Probar en dispositivos reales, no solo emuladores
+
+### Seguridad
+
+1. **Validación**: Validar datos tanto en frontend como backend
+2. **Sanitización**: Sanitizar inputs del usuario
+3. **Tokens**: No exponer tokens en logs o console
+4. **HTTPS**: Usar HTTPS en producción siempre
+
+## Paleta de Colores
+
+### Variables CSS Semánticas
+
+El proyecto utiliza variables CSS semánticas para mantener consistencia entre temas claro y oscuro. Todas las variables están definidas en `assets/styles/base/base.css`.
+
+### Tema Claro (Light Mode)
+
+```css
+:root,
+:root.light,
+.light {
+  /* Fondos */
+  --color-background: #ffffff;
+  --color-background-soft: #f8f8f8;
+  --color-background-mute: #f2f2f2;
+  
+  /* Layout */
+  --color-layout-bg: #ffffff;
+  --color-surface-bg: #ffffff;
+  --color-content-bg: #f5f8fa;
+  
+  /* Texto */
+  --color-heading: #2c3e50;
+  --color-text: #2c3e50;
+  --color-text-muted: #64748b;
+  
+  /* Bordes */
+  --color-border: rgba(60, 60, 60, 0.12);
+  --color-border-hover: rgba(60, 60, 60, 0.29);
+  
+  /* Acentos */
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+}
+```
+
+### Tema Oscuro (Dark Mode)
+
+```css
+:root.dark,
+.dark {
+  /* Fondos */
+  --color-background: #111111;
+  --color-background-soft: #161616;
+  --color-background-mute: #1e1e1e;
+  
+  /* Layout */
+  --color-layout-bg: #111111;
+  --color-surface-bg: #111111;
+  --color-content-bg: #161616;
+  
+  /* Texto */
+  --color-heading: #ffffff;
+  --color-text: #e0e0e0;
+  --color-text-muted: #a0a0a0;
+  
+  /* Bordes */
+  --color-border: #2a2a2a;
+  --color-border-hover: #333333;
+  
+  /* Acentos */
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+}
+```
+
+### Uso en Componentes
+
+Siempre usar variables semánticas en lugar de colores hardcodeados:
+
+```css
+/* ✅ Correcto */
+.mi-componente {
+  background: var(--color-surface-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+/* ❌ Incorrecto */
+.mi-componente {
+  background: #ffffff;
+  color: #2c3e50;
+}
+```
+
+## Resumen de Convenciones
+
+### Estructura de Archivos
+- **Vistas**: `views/[modulo]/Vista[Nombre].vue`
+- **Plantillas**: `layouts/Plantilla[Nombre].vue`
+- **Componentes Globales**: `components/globales/[categoria]/[Nombre].vue`
+- **Componentes de Vista**: `components/vistas/[modulo]/[Nombre].vue`
+- **Stores**: `stores/[nombre].js` (camelCase, español)
+- **Services**: `services/[nombre].js` (camelCase)
+- **Composables**: `composables/use[Nombre].js` (prefijo `use`)
+
+### Nomenclatura
+- **Vistas**: PascalCase con prefijo `Vista`
+- **Plantillas**: PascalCase con prefijo `Plantilla`
+- **Componentes Globales**: PascalCase en español
+- **Componentes de Vista**: PascalCase descriptivo
+- **Stores/Services**: camelCase en español
+- **Composables**: camelCase con prefijo `use`
+
+### Orden de Imports
+1. Vue y librerías externas
+2. Stores
+3. Services
+4. Composables
+5. Layouts
+6. Componentes globales
+7. Componentes de vista
+8. Estilos
+
+### Inicialización
+- Stores críticos (auth, theme) se inicializan en `main.js`
+- Router guards verifican autenticación y permisos
+- Tema se inicializa antes de montar la app
+
+### Mobile (Capacitor)
+- Variables de entorno para URLs dinámicas
+- Detección de plataforma con composable `usePlatform`
+- Configuración en `capacitor.config.json`
+- Build: `npm run build` → `npx cap sync` → `npx cap open android/ios`

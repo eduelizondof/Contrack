@@ -1,0 +1,27 @@
+{
+  "name": "CNERP - Sistema ERP con Punto de Venta",
+  "short_name": "CNERP",
+  "description": "Sistema ERP completo con punto de venta, inventario y gestión comercial. Desarrollado por CNVA - Conectiva IT Solutions.",
+  "start_url": "/",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/favicon/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#6366f1",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "lang": "es-MX",
+  "dir": "ltr"
+}
